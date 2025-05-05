@@ -37,18 +37,15 @@ function renderProducts() {
 function renderCart() {
   cartList.innerHTML = '';
   
-  // Ensure cart is always displayed, even when empty
   if (cart.length === 0) {
-    const li = document.createElement("li");
-    li.textContent = "Your cart is empty";
-    cartList.appendChild(li);
-  } else {
-    cart.forEach(item => {
-      const li = document.createElement("li");
-      li.textContent = `${item.name} - $${item.price}`;
-      cartList.appendChild(li);
-    });
+    return; // Leave the cart list completely empty
   }
+  
+  cart.forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.name} - $${item.price}`;
+    cartList.appendChild(li);
+  });
 }
 
 // Add item to cart
