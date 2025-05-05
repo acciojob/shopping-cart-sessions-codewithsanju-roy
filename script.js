@@ -1,4 +1,4 @@
-
+// Product data
 const products = [
   { id: 1, name: "Product 1", price: 10 },
   { id: 2, name: "Product 2", price: 20 },
@@ -7,15 +7,15 @@ const products = [
   { id: 5, name: "Product 5", price: 50 },
 ];
 
-
+// DOM elements
 const productList = document.getElementById("product-list");
 const cartList = document.getElementById("cart-list");
 const clearCartBtn = document.getElementById("clear-cart-btn");
 
-
+// Initialize cart from sessionStorage or empty array
 let cart = JSON.parse(sessionStorage.getItem('cart')) || [];
 
-
+// Render product list
 function renderProducts() {
   productList.innerHTML = '';
   products.forEach((product) => {
@@ -24,7 +24,7 @@ function renderProducts() {
     productList.appendChild(li);
   });
 
-
+  // Add event listeners to all "Add to Cart" buttons
   document.querySelectorAll('.add-to-cart-btn').forEach(button => {
     button.addEventListener('click', (e) => {
       const productId = parseInt(e.target.getAttribute('data-id'));
@@ -33,48 +33,55 @@ function renderProducts() {
   });
 }
 
-
+// Render cart list
 function renderCart() {
   cartList.innerHTML = '';
   
+  // Ensure cart is always displayed, even when empty
   if (cart.length === 0) {
     const li = document.createElement("li");
     li.textContent = "Your cart is empty";
     cartList.appendChild(li);
-    return;
+  } else {
+    cart.forEach(item => {
+      const li = document.createElement("li");
+      li.textContent = `${item.name} - $${item.price}`;
+      cartList.appendChild(li);
+    });
   }
-
-  cart.forEach(item => {
-    const li = document.createElement("li");
-    li.textContent = `${item.name} - $${item.price}`;
-    cartList.appendChild(li);
-  });
 }
 
-
+// Add item to cart
 function addToCart(productId) {
   const product = products.find(p => p.id === productId);
   if (!product) return;
 
-
+  // Check if product is already in cart
   const existingItem = cart.find(item => item.id === productId);
   if (!existingItem) {
     cart.push({...product});
-    sessionStorage.setItem('cart', JSON.stringify(cart));
+    updateSessionStorage();
     renderCart();
   }
 }
 
+// Update session storage
+function updateSessionStorage() {
+  sessionStorage.setItem('cart', JSON.stringify(cart));
+}
 
+// Clear cart
 function clearCart() {
   cart = [];
-  sessionStorage.removeItem('cart');
+  updateSessionStorage();
   renderCart();
 }
 
-
+// Event listeners
 clearCartBtn.addEventListener('click', clearCart);
 
-
-renderProducts();
-renderCart();
+// Initial render
+document.addEventListener('DOMContentLoaded', () => {
+  renderProducts();
+  renderCart();
+});
