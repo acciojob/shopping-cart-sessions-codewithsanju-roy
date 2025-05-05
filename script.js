@@ -70,10 +70,14 @@ function updateSessionStorage() {
 // Clear cart
 function clearCart() {
   cart = [];
-  updateSessionStorage();
+  sessionStorage.removeItem('cart');
+  
+  // Debug log after clearing
+  console.log('After clearing - sessionStorage:', sessionStorage.getItem('cart'));
+  console.log('Current cart state:', cart);
+  
   renderCart();
 }
-
 // Event listeners
 clearCartBtn.addEventListener('click', clearCart);
 
